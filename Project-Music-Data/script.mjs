@@ -6,9 +6,7 @@
 import { getUserIDs } from "./data.mjs";
 import { getListenEvents,getSong } from "./data.mjs";
 import { checkEveryDaySongs } from "./common.mjs";
-import { getMostPlayedSongByListens,getMostPlayedSongByTime,} from "./common.mjs";
-import { getMostPlayedArtistByListens,getMostPlayedArtistByTime,} from "./common.mjs";
-import { getMostPlayedSongFridayByListens,getMostPlayedSongFridayByTime,} from "./common.mjs";
+import { getMostPlayed} from "./common.mjs";
 import { getMostGenresByListens, getSongInARow } from "./common.mjs";
 
 window.onload = function () {
@@ -48,22 +46,22 @@ function createUserPage(user) {
     }
 
     const mostPlayedSong1 = document.createElement("p");
-    mostPlayedSong1.innerHTML = `The most played song (by number of listens): ${getMostPlayedSongByListens(user)}`;
+    mostPlayedSong1.innerHTML = `The most played song (by number of listens): ${getMostPlayed(user).mostPlayedSongsByListens}`;
 
     const mostPlayedSong2 = document.createElement("p");
-    mostPlayedSong2.innerHTML = `The most played song (by listening time): ${getMostPlayedSongByTime(user)}`;
+    mostPlayedSong2.innerHTML = `The most played song (by listening time): ${getMostPlayed(user).mostPlayedSongsByTime}`;
 
     const mostPlayedArtist1 = document.createElement("p");
-    mostPlayedArtist1.innerHTML = `The most played artist (by number of listens): ${getMostPlayedArtistByListens(user)}`;
+    mostPlayedArtist1.innerHTML = `The most played artist (by number of listens): ${getMostPlayed(user).mostPlayedArtistByListens}`;
 
     const mostPlayedArtist2 = document.createElement("p");
-    mostPlayedArtist2.innerHTML = `The most played artist (by listening time): ${getMostPlayedArtistByTime(user)}`;
+    mostPlayedArtist2.innerHTML = `The most played artist (by listening time): ${getMostPlayed(user).mostPlayedArtistByTime}`;
 
     const songFriday1 = document.createElement("p");
-    songFriday1.innerHTML = `The most played song on Friday night (by number of listens): ${getSong(getMostPlayedSongFridayByListens(user)).title}`;
+    songFriday1.innerHTML = `The most played song on Friday night (by number of listens): ${getMostPlayed(user).mostPlayedSongFridayByListens}`;
 
     const songFriday2 = document.createElement("p");
-    songFriday2.innerHTML = `The most played song on Friday night (by listening time): ${getSong(getMostPlayedSongFridayByTime(user)).title}`;
+    songFriday2.innerHTML = `The most played song on Friday night (by listening time): ${getMostPlayed(user).mostPlayedSongFridayByTime}`;
 
     const mostPlayedGenres = document.createElement("p");
     mostPlayedGenres.innerHTML = `${getMostGenresByListens(user).length} most played genres (by number of listens): ${getMostGenresByListens(user)}`;
@@ -81,9 +79,15 @@ function createUserPage(user) {
       mostPlayedGenres,
       songInARow,
     );
-    if (getMostPlayedSongFridayByListens(user)===null) {songFriday1.remove()};
-    if (getMostPlayedSongFridayByTime(user)===null) {songFriday2.remove()};
-    if (getSongInARow(user) === ["No song played in a row", 0]) {songInARow.remove()};
+    if (getMostPlayed(user).mostPlayedSongsByListens===null) {songFriday1.remove()};
+    if (getMostPlayed(user).mostPlayedSongsByTime===null) {songFriday2.remove()};
+    if (getMostPlayed(user).getMostPlayedArtistByListens===null) {mostPlayedArtist1.remove()};
+    if (getMostPlayed(user).mostPlayedArtistByTime===null) {mostPlayedArtist2.remove()};
+    if (getMostPlayed(user).mostPlayedSongFridayByListens===null) {songFriday1.remove()};
+    if (getMostPlayed(user).mostPlayedSongFridayByTime===null) {songFriday2.remove()};
+    if (getMostGenresByListens(user).length === 0) {mostPlayedGenres.remove()};
+    if (getSongInARow(user)[0]===null) {songInARow.remove()};
+    
     document.body.appendChild(main);
   }
 }
