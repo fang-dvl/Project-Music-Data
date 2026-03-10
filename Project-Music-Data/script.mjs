@@ -40,11 +40,7 @@ function createUserPage(user) {
     const everydaySong = document.createElement("p");
     everydaySong.id = "everyday-song";
     everydaySong.textContent = `Songs that played everyday: ${checkEveryDaySongs(user)}`;
-    main.appendChild(everydaySong);
-    if (Object.keys(checkEveryDaySongs(user)).length === 0) {
-      everydaySong.remove();
-    }
-
+    
     const mostPlayedSong1 = document.createElement("p");
     mostPlayedSong1.innerHTML = `The most played song (by number of listens): ${getMostPlayed(user).mostPlayedSongsByListens}`;
 
@@ -70,6 +66,7 @@ function createUserPage(user) {
     songInARow.innerHTML = `The most played song in a row: ${getSong(getSongInARow(user)[0]).title}, ${getSongInARow(user)[1]} times`;
 
     main.append(
+      everydaySong,
       mostPlayedSong1,
       mostPlayedSong2,
       mostPlayedArtist1,
@@ -79,14 +76,16 @@ function createUserPage(user) {
       mostPlayedGenres,
       songInARow,
     );
-    if (getMostPlayed(user).mostPlayedSongsByListens===null) {songFriday1.remove()};
-    if (getMostPlayed(user).mostPlayedSongsByTime===null) {songFriday2.remove()};
-    if (getMostPlayed(user).getMostPlayedArtistByListens===null) {mostPlayedArtist1.remove()};
-    if (getMostPlayed(user).mostPlayedArtistByTime===null) {mostPlayedArtist2.remove()};
-    if (getMostPlayed(user).mostPlayedSongFridayByListens===null) {songFriday1.remove()};
-    if (getMostPlayed(user).mostPlayedSongFridayByTime===null) {songFriday2.remove()};
+
+    if (Object.keys(checkEveryDaySongs(user)).length === 0) {everydaySong.remove();}
+    if (!getMostPlayed(user).mostPlayedSongsByListens) {songFriday1.remove()};
+    if (!getMostPlayed(user).mostPlayedSongsByTime) {songFriday2.remove()};
+    if (!getMostPlayed(user).getMostPlayedArtistByListens) {mostPlayedArtist1.remove()};
+    if (!getMostPlayed(user).mostPlayedArtistByTime) {mostPlayedArtist2.remove()};
+    if (!getMostPlayed(user).mostPlayedSongFridayByListens) {songFriday1.remove()};
+    if (!getMostPlayed(user).mostPlayedSongFridayByTime) {songFriday2.remove()};
     if (getMostGenresByListens(user).length === 0) {mostPlayedGenres.remove()};
-    if (getSongInARow(user)[0]===null) {songInARow.remove()};
+    if (!getSongInARow(user)[0]) {songInARow.remove()};
     
     document.body.appendChild(main);
   }

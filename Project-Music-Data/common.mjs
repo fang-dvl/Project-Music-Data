@@ -18,7 +18,7 @@ export function checkEveryDaySongs(user) {
   allSongs.forEach((song) => {
     result[song] = allDays.every((day) => songsByDay[day].has(song));
   });
-  return Object.keys(result);
+  return Object.keys(result).filter(song => result[song]);
 }
 
 //get the most played song by number of listens
@@ -31,44 +31,61 @@ export function getMostPlayed(user) {
   let fridayListens = {};
   let fridayMaxTime = 0;
   let fridayMaxListens=0;
+
   events.forEach((e) => {
+    //get most played song and artist by listening time
     let songTitle=getSong(e.song_id).title
     let songArtist=getSong(e.song_id).artist
+
     listens[songTitle] = (listens[songTitle] || 0) + 1;
-    artists[songArtist] = (artists.songArtist || 0) + listens[songTitle];
+    artists[songArtist] = (artists[songArtist] || 0) + listens[songTitle];
     const count = listens[songTitle] || 0;
     const totalTime = count * getSong(e.song_id).duration_seconds;
+
     if (totalTime > maxTime) {
       maxTime = totalTime;
-      mostPlayed.mostPlayedSongsByTime= songTitle || null;
-      mostPlayed.mostPlayedArtistByTime= songArtist || null;
+      mostPlayed.mostPlayedSongsByTime= songTitle;
+      mostPlayed.mostPlayedArtistByTime= songArtist;
     }
-    //get most played song on Friday night by number of listens and by listening time
+    
+    //get most played song on Friday night by number of listens
     const date = new Date(e.timestamp);
     const daysOfWeek = date.getDay();
     const hour = date.getHours();
-    if (daysOfWeek === 5 && hour >= 17 && hour < 24 || (daysOfWeek === 6 && hour >= 0 && hour < 4)) {
+
+    if ((daysOfWeek === 5 && hour >= 17 && hour < 24) || (daysOfWeek === 6 && hour >= 0 && hour < 4)) {
       fridayListens[songTitle] = (fridayListens[songTitle] || 0) + 1;
       if (fridayListens[songTitle] > fridayMaxListens) {
         fridayMaxListens = fridayListens[songTitle];
-        mostPlayed.mostPlayedSongFridayByListens = songTitle || null;
+        mostPlayed.mostPlayedSongFridayByListens = songTitle;
       }
 
+    //get most played song on Friday night by listening time
       let fridayTotalTime =fridayListens[songTitle] * getSong(e.song_id).duration_seconds;
       if (fridayTotalTime > fridayMaxTime) {
         fridayMaxTime = fridayTotalTime;
-        mostPlayed.mostPlayedSongFridayByTime =songTitle || null;
+        mostPlayed.mostPlayedSongFridayByTime =songTitle;
       }
     }
 });
 
+   if (Object.keys(listens).length === 0) {
+    mostPlayed.mostPlayedSongsByListens = null;
+    mostPlayed.mostPlayedArtistByListens = null;
+    mostPlayed.mostPlayedSongsByTime = null;
+    mostPlayed.mostPlayedArtistByTime = null;
+    mostPlayed.mostPlayedSongFridayByListens = null;
+    mostPlayed.mostPlayedSongFridayByTime = null;
+    return mostPlayed;
+  }
+
   //get most played songs and artists by listens
   const maxSongListens = Math.max(...Object.values(listens));
   mostPlayed.mostPlayedSongsByListens = (Object.keys(listens).filter(
-    (song) => listens[song] === maxSongListens) )|| null;
+    (song) => listens[song] === maxSongListens) );
   const maxArtistListens= Math.max(...Object.values(artists));
   mostPlayed.mostPlayedArtistByListens =(Object.keys(artists).filter(
-    (artist) => artists[artist] === maxArtistListens) )|| null;
+    (artist) => artists[artist] === maxArtistListens) );
   return mostPlayed;
 }
 
@@ -96,7 +113,7 @@ export function getSongInARow(user) {
     }
   }
   if (Object.keys(songsInRow).length === 0) {
-    return [null, null];
+    return null;
   }
   const result = Object.entries(songsInRow).sort((a, b) => b[1] - a[1]);
   return result[0];
