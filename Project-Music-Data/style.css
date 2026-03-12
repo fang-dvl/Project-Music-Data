@@ -1,0 +1,47 @@
+
+body {
+  font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+  background-color: #f5f6fa;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  letter-spacing: 2px;
+}
+
+
+#user-source {
+  font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+  padding: 8px 12px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  margin-top: 80px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+
+main {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 500px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+
+main p {
+  padding: 10px;
+  padding-left:15px;
+  margin: 8px 0;
+  background: #f9f9f9;
+  border-radius: 6px;
+  font-size: 15px;  
+}
+
+main p:hover {
+  transform: translateY(-3px);
+  background: #7cd65e;
+}
+
